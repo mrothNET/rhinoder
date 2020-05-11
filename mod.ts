@@ -3,8 +3,9 @@ function startProcess(args: string[] = []): Deno.Process {
 }
 
 const throttle = 500;
+
 let app: Deno.Process = startProcess(Deno.args);
-let timeout: number|null = null;
+let timeout: number | undefined;
 
 function restartApp() {
   app.close();
@@ -12,8 +13,8 @@ function restartApp() {
 }
 
 for await (const event of Deno.watchFs('.')) {
-  if (event.kind !== "access") {
-    if (timeout) clearTimeout(timeout);
+  if (event.kind !== 'access') {
+    timeout ?? clearTimeout(timeout);
     timeout = setTimeout(restartApp, throttle);
   }
 }
