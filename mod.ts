@@ -1,16 +1,16 @@
-function startProcess(args: string[] = []): Deno.Process {
-  return Deno.run({ cmd: ['deno', ...args] });
-}
-
 const throttle = 500;
 
-let app: Deno.Process = startProcess(Deno.args);
-let timeout: number | undefined;
+const cmd = ['deno', ...Deno.args];
+const startApp = () => Deno.run({ cmd });
+
+let app: Deno.Process = startApp();
 
 function restartApp() {
   app.close();
-  app = startProcess(Deno.args);
+  app = startApp();
 }
+
+let timeout: number | undefined;
 
 for await (const event of Deno.watchFs('.')) {
   if (event.kind !== 'access') {
