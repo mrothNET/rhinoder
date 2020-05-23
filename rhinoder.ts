@@ -6,20 +6,18 @@ if (Deno.args.length === 0) {
 }
 
 const cmd = ['deno', ...Deno.args];
-const startApp = () => Deno.run({ cmd });
 
-let app: Deno.Process = startApp();
+let app: Deno.Process | undefined;
+const startApp = () => (app = Deno.run({ cmd }));
+const stopApp = () => app && (app.close(), (app = undefined));
 
-function restartApp() {
-  app.close();
-  app = startApp();
-}
+startApp();
 
-let timeout: number | undefined;
-
+let timer: number | undefined;
 for await (const event of Deno.watchFs('.')) {
   if (event.kind !== 'access') {
-    timeout ?? clearTimeout(timeout);
-    timeout = setTimeout(restartApp, throttle);
+    stopApp();
+    timer && clearTimeout(timer);
+    timer = setTimeout(startApp, throttle);
   }
 }
