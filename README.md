@@ -10,7 +10,7 @@ This program reloads a deno program automatically when a file in the current wor
 Install as a shell command using the `deno` mechanism.
 
 ```bash
-#$ deno install --allow-run --allow-read https://github.com/mrothNET/rhinoder/raw/master/rhinoder.ts
+$# deno install --allow-run --allow-read https://github.com/mrothNET/rhinoder/raw/master/rhinoder.ts
 ```
 
 ## Usage
